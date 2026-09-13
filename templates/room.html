@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Room {{ room_code }} - DropRoom{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="room-header">
+        <div class="room-title">
+            <h1>DropRoom</h1>
+            <p class="room-code">Room: <strong>{{ room_code }}</strong></p>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn-small">← Back</a>
+    </div>
+
+    <div class="room-content">
+        <!-- Devices Section -->
+        <div class="section devices-section">
+            <h2>Connected Devices</h2>
+            <div class="device-count" id="device-count">Loading...</div>
+            <div class="devices-list" id="devices-list"></div>
+
+            <div class="form-group">
+                <label for="device-name">Device Name</label>
+                <input 
+                    type="text" 
+                    id="device-name" 
+                    placeholder="My Laptop"
+                    maxlength="100"
+                >
+            </div>
+
+            <button class="btn btn-secondary" onclick="changeDeviceName()">Update Device Name</button>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="section upload-section">
+            <div class="upload-area" id="upload-area">
+                <p class="upload-text">Drop files here</p>
+                <p class="upload-or">or</p>
+                <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">Choose Files</button>
+                <p class="upload-hint">Send files to your other device</p>
+            </div>
+            <input type="file" id="file-input" multiple hidden onchange="handleFileSelect(event)">
+            <p class="max-size">Maximum file size: {{ max_upload_mb }} MB</p>
+        </div>
+
+        <!-- Upload Progress -->
+        <div id="upload-progress-container" style="display:none;" class="section">
+            <h3>Uploading...</h3>
+            <div id="upload-progress" class="progress"></div>
+        </div>
+
+        <!-- Files Section -->
+        <div class="section files-section">
+            <h2>Files in this room</h2>
+            <div class="files-list" id="files-list">
+                <p class="empty-message">No files yet. Upload one to get started!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+<script src="{{ url_for('static', filename='js/room.js') }}"></script>
+
+<script>
+    // Initialize room
+    window.roomCode = '{{ room_code }}';
+    window.maxUploadBytes = {{ max_upload_mb * 1024 * 1024 }};
+    initializeRoom(window.roomCode);
+</script>
+{% endblock %}

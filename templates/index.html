@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}DropRoom - File Sharing{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="homepage">
+        <div class="header">
+            <h1 class="logo">DropRoom</h1>
+            <p class="headline">Move files between your devices.</p>
+            <p class="subheading">No account. No app. Just create a room and scan the QR code.</p>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="createRoom()">Create Room</button>
+            <a href="{{ url_for('join') }}" class="btn btn-secondary">Join Room</a>
+        </div>
+
+        <p class="footer-text">Temporary rooms automatically disappear.</p>
+    </div>
+</div>
+
+<script>
+    function createRoom() {
+        const button = event.target;
+        button.disabled = true;
+        button.textContent = 'Creating...';
+
+        fetch('/create-room', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                window.location.href = '/room/' + data.room_code;
+            })
+            .catch(err => {
+                alert('Error creating room: ' + err);
+                button.disabled = false;
+                button.textContent = 'Create Room';
+            });
+    }
+</script>
+{% endblock %}

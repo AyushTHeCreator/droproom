@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Join Room - DropRoom{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h1>Join a Room</h1>
+        
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="room_code">Enter Room Code</label>
+                <input 
+                    type="text" 
+                    id="room_code" 
+                    name="room_code" 
+                    maxlength="6" 
+                    placeholder="482913"
+                    inputmode="numeric"
+                    required
+                >
+                <small>A 6-digit code shared by the room creator</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Join Room</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Only allow digits
+    document.getElementById('room_code').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
+{% endblock %}
